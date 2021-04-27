@@ -7,36 +7,42 @@
         <result property="createSn" column="create_sn" javaType="String"/>
         <result property="createTime" column="create_time" javaType="java.util.Date"/>
         <result property="nextDealSn" column="next_deal_sn" javaType="String"/>
-        <result property="totalAmount" column="total_amount" javaType="String"/>
+        <result property="totalAmount" column="total_amount" javaType="Double"/>
         <result property="status" column="status" javaType="String"/>
         <association property="creator" column="create_sn" javaType="Employee">
-            <result property="sn" column="csn" javaType="String"/>
             <result property="name" column="cname" javaType="String"/>
-            <result property="departmentSn" column="cDepartmentSn" javaType="String"/>
-            <result property="post" column="cPost" javaType="String"/>
+            <result property="post" column="cpost" javaType="String"/>
         </association>
         <association property="approve" column="next_deal_sn" javaType="Employee">
-            <result property="" column="" javaType=""/>
-            <result property="" column="" javaType=""/>
-            <result property="" column="" javaType=""/>
-            <result property="" column="" javaType=""/>
+            <result property="name" column="aname" javaType="String"/>
+            <result property="post" column="apost" javaType="String"/>
         </association>
     </resultMap>
 
     <select id="selectAllC" resultMap="res" parameterType="String">
-        select * from claim_voucher c left join employee e
-        on ;
+        select c.*,e.name aname,e.post apost,d.name cname,d.post cpost
+        from claim_voucher c
+        left join employee e  on c.next_deal_sn = e.sn
+        left join employee d  on c.create_sn = d.sn
+         where  c.create_sn = #{csn};
     </select>
 
     <select id="selectAllH" resultMap="res" parameterType="String">
-        select * from claim_voucher c left join employee e
-        on ;
+        select c.*,e.name aname,e.post apost,d.name cname,d.post cpost
+        from claim_voucher c
+        left join employee e  on c.next_deal_sn = e.sn
+        left join employee d  on c.create_sn = d.sn
+         where  c.next_deal_sn = #{hsn};
     </select>
     <select id="selectOne" resultMap="res" parameterType="Integer">
-        select * from claim_voucher where id = #{id};
+        select c.*,e.name aname,e.post apost,d.name cname,d.post cpost
+        from claim_voucher c
+        left join employee e  on c.next_deal_sn = e.sn
+        left join employee d  on c.create_sn = d.sn
+        where  c.id = #{id};
     </select>
 
-    <insert id="insert" parameterType="ClaimVoucher" useGeneratedKeys="true">
+    <insert id="insert" parameterType="ClaimVoucher" keyProperty="id" useGeneratedKeys="true">
         insert into claim_voucher (cause,create_sn,create_time,next_deal_sn,total_amount,status)
         values (#{cause},#{createSn},#{createTime},#{nextDealSn},#{totalAmount},#{status});
     </insert>
@@ -58,7 +64,6 @@
         <if test="status != null">
             status = #{status}
         </if>
-
         where id = #{id}
     </update>
 

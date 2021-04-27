@@ -9,7 +9,7 @@ import java.util.List;
 public interface ClaimVoucherItemDao {
 
     void insert(ClaimVoucherItem claimVoucherItem);
-    void update(List<ClaimVoucherItem> claimVoucherItemList,Integer claimVoucherId);
+    void update(ClaimVoucherItem claimVoucherItem);
     void delete(Integer id);
     List<ClaimVoucherItem> selectAll(Integer id);
 }

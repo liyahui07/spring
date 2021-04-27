@@ -9,10 +9,16 @@
         <result property="dealWay" column="deal_way" javaType="String"/>
         <result property="dealResult" column="deal_result" javaType="String"/>
         <result property="comment" column="comment" javaType="String"/>
+        <association property="dealer" column="deal_sn" javaType="Employee">
+            <result property="name" column="dname" javaType="String"/>
+            <result property="post" column="dpost" javaType="String"/>
+        </association>
     </resultMap>
 
     <select id="selectAll" resultMap="res" parameterType="Integer">
-        select * from deal_record where claim_voucher_id = #{id}
+        select r.*,e.name dname,e.post dpost from deal_record r left join employee e
+        on r.deal_sn = e.sn
+        where r.claim_voucher_id = #{id} order by d.deal_time
     </select>
 
     <insert id="insert" parameterType="DealRecord" useGeneratedKeys="true">

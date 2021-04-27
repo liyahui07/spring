@@ -13,4 +13,5 @@ public class DealRecord {
     private String dealWay;
     private String dealRest;
     private String comment;
+    private Employee dealer;
 }
