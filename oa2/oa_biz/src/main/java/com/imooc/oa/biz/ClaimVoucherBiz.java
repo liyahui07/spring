@@ -16,6 +16,9 @@ public interface ClaimVoucherBiz {
     ClaimVoucher getClaimVoucher(Integer id);
     List<ClaimVoucherItem> getCVItem(Integer cvid);
     List<DealRecord> getRecord(Integer cvid);
+    List<ClaimVoucher> getForSelf(String sn);
+    List<ClaimVoucher> getForDeal(String sn);
+    void update(ClaimVoucher claimVoucher,List<ClaimVoucherItem> items);
 
 
 }

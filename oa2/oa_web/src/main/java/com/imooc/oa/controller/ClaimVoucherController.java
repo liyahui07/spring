@@ -6,6 +6,7 @@ import com.imooc.oa.dto.ClaimVoucherInfo;
 import com.imooc.oa.entity.ClaimVoucher;
 import com.imooc.oa.entity.Employee;
 import com.imooc.oa.global.Content;
+import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ public class ClaimVoucherController {
 
     @Autowired
     ClaimVoucherBiz claimVoucherBiz;
+
+
+
 
     @RequestMapping("/to_add")
     public String toAdd(Map<String,Object> map){
@@ -43,6 +47,35 @@ public class ClaimVoucherController {
         return "claim_voucher_detail";
     }
 
+    @RequestMapping("/self")
+    public String self(HttpSession session,Map<String,Object> map){
+        Employee employee = (Employee)session.getAttribute("employee");
+        map.put("self",claimVoucherBiz.getForSelf(employee.getSn()));
+        return "claim_voucher_self";
+    }
+
+    @RequestMapping("/deal")
+    public String deal(HttpSession session,Map<String,Object> map){
+        Employee employee = (Employee)session.getAttribute("employee");
+        map.put("deal",claimVoucherBiz.getForDeal(employee.getSn()));
+        return "claim_voucher_deal";
+    }
+
+    @RequestMapping("/to_update")
+    public String toUpdate(Integer id, Map<String,Object> map){
+        map.put("item",Content.getItems());
+        ClaimVoucherInfo claimVoucherInfo = new ClaimVoucherInfo();
+        claimVoucherInfo.setClaimVoucher(claimVoucherBiz.getClaimVoucher(id));
+        claimVoucherInfo.setItems(claimVoucherBiz.getCVItem(id));
+        map.put("info",claimVoucherInfo);
+        return "claim_voucher_update";
+    }
+
+    @RequestMapping("/update")
+    public String update(ClaimVoucherInfo info){
+        claimVoucherBiz.update(info.getClaimVoucher(),info.getItems());
+        return "redirect:deal";
+    }
 
 
 }

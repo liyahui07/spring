@@ -42,11 +42,49 @@ public class ClaimVoucherBizImpl implements ClaimVoucherBiz {
     }
 
     public List<ClaimVoucherItem> getCVItem(Integer cvid) {
-        return null;
+        return claimVoucherItemDao.selectAll(cvid);
     }
 
     public List<DealRecord> getRecord(Integer cvid) {
-        return null;
+        return dealRecordDao.selectAll(cvid);
+    }
+
+    public List<ClaimVoucher> getForSelf(String sn) {
+        return claimVoucherDao.selectAllC(sn);
+    }
+
+    public List<ClaimVoucher> getForDeal(String sn) {
+        return claimVoucherDao.selectAllH(sn);
+    }
+
+    public void update(ClaimVoucher claimVoucher, List<ClaimVoucherItem> items) {
+        claimVoucherDao.update(claimVoucher);
+        List<ClaimVoucherItem> old = claimVoucherItemDao.selectAll(claimVoucher.getId());
+        for (ClaimVoucherItem claimVoucherItem :
+             items) {
+            boolean flag = false;
+            int id = 0;
+            for (ClaimVoucherItem c :
+                    old) {
+                if (c.getId() == claimVoucherItem.getId()) {
+                    flag = true;
+                    id = c.getId();
+                    break;
+                }
+                }
+            if (flag){
+                claimVoucherItemDao.delete(id);
+            }
+        }
+        for (ClaimVoucherItem c :
+                items) {
+            if (c.getId() > 0 && c.getId() != null) {
+                claimVoucherItemDao.update(c);
+            }else {
+                claimVoucherItemDao.insert(c);
+            }
+            }
+
     }
 
 
